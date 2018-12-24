@@ -1,3 +1,11 @@
+/*
+you must have already install the midi and the FastLED library
+also you need the LiquidCrystal_I2C
+https://github.com/FortySevenEffects/arduino_midi_library/
+https://github.com/FastLED/FastLED
+https://github.com/johnrickman/LiquidCrystal_I2C
+if your lcd is not working change LiquidCrystal_I2C lcd(0x27,16,2); to LiquidCrystal_I2C lcd(0x3F,16,2);
+*/
 #define USE_GPIO_INIT  0
 #define USE_SPI_MIDI   1
 const char Instr000[] PROGMEM = "Acoustic Grand Piano";
@@ -240,7 +248,7 @@ CRGB leds[NUM_LEDS];
 MIDI_CREATE_DEFAULT_INSTANCE();
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x3F for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x27,16,2);  // if your lcd is not working change the address to 0x3F
 void setup()
 {
   LEDS.addLeds<WS2812,DATA_PIN,RGB>(leds,NUM_LEDS);
@@ -283,7 +291,6 @@ void setup()
 
 #if USE_SPI
   //Setup SPI for VS1053
-  pinMode(10, OUTPUT); //Pin 10 must be set as an output for the SPI communication to work
   SPI.begin();
   SPI.setBitOrder(MSBFIRST);
   SPI.setDataMode(SPI_MODE0);
@@ -409,130 +416,4 @@ void loop() {
     prev=nnow;
       }
     }
-/*  delay(1000);
-  
-  talkMIDI(0xB0, 0x07, 120); //0xB0 is channel message, set channel volume to near max (127)
-
-#if 1
-  //Demo Basic MIDI instruments, GM1
-  //=================================================================
-  Serial.println("Basic Instruments");
-  talkMIDI(0xB0, 0, 0x00); //Default bank GM1
-
-  //Change to different instrument
-  for(int instrument = 0 ; instrument < 127 ; instrument++) {
-
-    Serial.print(" Instrument: ");
-    Serial.println(instrument, DEC);
-
-    talkMIDI(0xC0, instrument, 0); //Set instrument number. 0xC0 is a 1 data byte command
-
-    //Play notes from F#-0 (30) to F#-5 (90):
-    for (int note = 30 ; note < 40 ; note++) {
-      Serial.print("N:");
-      Serial.println(note, DEC);
-      
-      //Note on channel 1 (0x90), some note value (note), middle velocity (0x45):
-      noteOn(0, note, 127);
-      delay(200);
-
-      //Turn off the note with a given off/release velocity
-      noteOff(0, note, 127);
-      delay(50);
-    }
-
-    delay(100); //Delay between instruments
-  }
-  //=================================================================
-#endif
-
-#if 0
-  for(int instrument = 0 ; instrument < 1 ; instrument++) {
-    for (int bank=0; bank<2; ++bank) {
-      talkMIDI(0xB0, 0, bank ? 0x79 : 0);
-      Serial.print("Bank: ");
-      Serial.print(bank ? 0x79 : 0, DEC);
-      Serial.print(" Instrument: ");
-      Serial.println(instrument+1, DEC);
-  
-      talkMIDI(0xC0, instrument, 0);
-      noteOn(0, 60, 127);
-      noteOn(0, 63, 127);
-      noteOn(0, 67, 127);
-      delay(2000);
-      
-      //Turn off the note with a given off/release velocity
-      noteOff(0, 60, 127);
-      noteOff(0, 63, 127);
-      noteOff(0, 67, 127);
-      delay(100);
-  }
-  delay(5000);
-}
-#endif
-
-#if 0
-  //Demo GM2 / Fancy sounds
-  //=================================================================
-  Serial.println("Demo Fancy Sounds");
-  talkMIDI(0xB0, 0, 0x78); //Bank select drums
-
-  //For this bank 0x78, the instrument does not matter, only the note
-  for(int instrument = 30 ; instrument < 31 ; instrument++) {
-
-    Serial.print(" Instrument: ");
-    Serial.println(instrument, DEC);
-
-    talkMIDI(0xC0, instrument, 0); //Set instrument number. 0xC0 is a 1 data byte command
-
-    //Play fancy sounds from 'High Q' to 'Open Surdo [EXC 6]'
-    for (int note = 27 ; note < 87 ; note++) {
-      Serial.print("N:");
-      Serial.println(note, DEC);
-      
-      //Note on channel 1 (0x90), some note value (note), middle velocity (0x45):
-      noteOn(0, note, 127);
-      delay(50);
-
-      //Turn off the note with a given off/release velocity
-      noteOff(0, note, 127);
-      delay(50);
-    }
-
-    delay(100); //Delay between instruments
-  }
-#endif
-
-#if 0
-  //Demo Melodic
-  //=================================================================
-  Serial.println("Demo Melodic? Sounds");
-  talkMIDI(0xB0, 0, 0x79); //Bank select Melodic
-  //These don't sound different from the main bank to me
-
-  //Change to different instrument
-  for(int instrument = 27 ; instrument < 87 ; instrument++) {
-
-    Serial.print(" Instrument: ");
-    Serial.println(instrument, DEC);
-
-    talkMIDI(0xC0, instrument, 0); //Set instrument number. 0xC0 is a 1 data byte command
-
-    //Play notes from F#-0 (30) to F#-5 (90):
-    for (int note = 30 ; note < 40 ; note++) {
-      Serial.print("N:");
-      Serial.println(note, DEC);
-      
-      //Note on channel 1 (0x90), some note value (note), middle velocity (0x45):
-      noteOn(0, note, 127);
-      delay(500);
-
-      //Turn off the note with a given off/release velocity
-      noteOff(0, note, 127);
-      delay(50);
-    }
-
-    delay(100); //Delay between instruments
-  }
-#endif*/
 }
